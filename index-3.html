@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free Tools Hub — Fast, Free Browser Tools</title>
+<meta name="description" content="Free, fast, browser-based tools: text, developer, and calculator utilities. No sign-up, no uploads, everything runs on your device.">
+<style>
+:root{
+  --bg:#070b14; --bg2:#0c1424; --panel:#101a2c; --panel2:#14213a; --border:#1f2f4a;
+  --text:#eaf1fb; --sub:#8ea3c2; --accent:#22d3ee; --accent2:#38bdf8; --accent-dim:#0e7490;
+  --danger:#f87171; --ok:#4ade80; --radius:14px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="light"]{
+  --bg:#f4f7fb; --bg2:#e9eff8; --panel:#ffffff; --panel2:#f1f5fb; --border:#dbe3f0;
+  --text:#0f1b2d; --sub:#5c6b82; --accent:#0891b2; --accent2:#0369a1; --accent-dim:#a5f3fc;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%}
+body{margin:0;font-family:var(--font);background:radial-gradient(1200px 800px at 80% -10%,var(--bg2),var(--bg));color:var(--text);-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
+a{color:inherit}
+button{font-family:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+/* header */
+header{position:sticky;top:0;z-index:50;padding-top:env(safe-area-inset-top,0px);background:rgba(7,11,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+:root[data-theme="light"] header{background:rgba(244,247,251,.85)}
+.headbar{display:flex;align-items:center;gap:16px;height:64px}
+.logo{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;white-space:nowrap;cursor:pointer}
+.logo span{color:var(--accent)}
+nav.desknav{display:flex;gap:4px;margin-left:8px}
+nav.desknav button{background:none;border:none;color:var(--sub);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.92rem}
+nav.desknav button:hover,nav.desknav button.active{color:var(--text);background:var(--panel2)}
+.headbar .grow{flex:1}
+.icnbtn{background:var(--panel2);border:1px solid var(--border);color:var(--text);width:38px;height:38px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.icnbtn:active{transform:scale(.94)}
+.hamburger{display:none}
+#searchTop{display:none;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:6px 10px;min-width:200px}
+#searchTop input{background:none;border:none;outline:none;color:var(--text);width:100%;font-size:.9rem}
+@media(min-width:760px){#searchTop{display:flex}}
+.mobmenu{display:none;flex-direction:column;padding:8px 20px 16px;border-top:1px solid var(--border);background:var(--bg)}
+.mobmenu.open{display:flex}
+.mobmenu button{text-align:left;background:none;border:none;color:var(--sub);padding:12px 4px;font-size:1rem;border-bottom:1px solid var(--border)}
+@media(max-width:759px){nav.desknav{display:none}.hamburger{display:flex}}
+
+main{padding:32px 0 60px}
+.hero{text-align:center;padding:48px 0 28px}
+.hero h1{font-size:clamp(1.9rem,5vw,3rem);margin:0 0 10px;letter-spacing:-.03em;line-height:1.1}
+.hero p{color:var(--sub);font-size:1.05rem;max-width:560px;margin:0 auto 26px}
+.searchbox{max-width:520px;margin:0 auto;position:relative}
+.searchbox input{width:100%;padding:16px 18px;border-radius:14px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:1rem;outline:none}
+.searchbox input:focus{border-color:var(--accent)}
+#searchResults{position:absolute;left:0;right:0;top:calc(100% + 8px);background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;text-align:left;z-index:20;display:none;max-height:280px;overflow-y:auto}
+#searchResults.show{display:block}
+#searchResults .sr-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);font-size:.92rem}
+#searchResults .sr-item:last-child{border-bottom:none}
+#searchResults .sr-item:hover{background:var(--panel2)}
+
+.section-title{font-size:1.25rem;margin:40px 0 16px;letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.catcard{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;cursor:pointer;transition:border-color .15s,transform .1s}
+.catcard:hover{border-color:var(--accent-dim)}
+.catcard:active{transform:scale(.97)}
+.catcard .ic{font-size:1.6rem;margin-bottom:8px}
+.catcard h3{margin:0 0 4px;font-size:1rem}
+.catcard p{margin:0;color:var(--sub);font-size:.78rem}
+
+.toolgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.toolcard{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:.9rem;transition:border-color .15s}
+.toolcard:hover{border-color:var(--accent-dim)}
+.toolcard .fav{margin-left:auto;background:none;border:none;color:var(--sub);cursor:pointer;font-size:1rem}
+.toolcard .fav.active{color:var(--accent)}
+
+/* tool page */
+.toolpage{display:none}
+.toolpage.active{display:block}
+.backbtn{background:none;border:none;color:var(--accent);cursor:pointer;font-size:.9rem;padding:8px 0;margin-bottom:8px}
+.toolhead h2{margin:0 0 6px;font-size:1.5rem}
+.toolhead p{color:var(--sub);margin:0 0 22px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+textarea,input[type=text],input[type=number],input[type=password],select{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px 14px;font-size:.95rem;font-family:var(--mono);outline:none}
+textarea{min-height:140px;resize:vertical}
+select,input[type=text],input[type=number],input[type=password]{font-family:inherit}
+label{display:block;font-size:.82rem;color:var(--sub);margin:14px 0 6px}
+label:first-child{margin-top:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{border:none;border-radius:10px;padding:12px 20px;font-size:.92rem;cursor:pointer;font-weight:600}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04141c}
+.btn-primary:active{transform:scale(.98)}
+.btn-secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:active{transform:scale(.98)}
+.output{margin-top:16px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:var(--mono);white-space:pre-wrap;word-break:break-word;min-height:40px;font-size:.9rem}
+.explain{margin-top:24px;color:var(--sub);font-size:.85rem;line-height:1.6;border-top:1px solid var(--border);padding-top:16px}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+.stat{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 16px;text-align:center;min-width:90px}
+.stat b{display:block;font-size:1.25rem;color:var(--accent)}
+.stat span{font-size:.72rem;color:var(--sub)}
+.swatch{width:100%;height:70px;border-radius:10px;border:1px solid var(--border);margin-top:14px}
+.colorwrap{display:flex;gap:12px;align-items:center}
+.colorwrap input[type=color]{width:60px;height:44px;border:1px solid var(--border);border-radius:10px;background:none;padding:2px}
+
+footer{border-top:1px solid var(--border);padding:36px 0;color:var(--sub);font-size:.85rem}
+footer .flinks{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0}
+footer .flinks a{text-decoration:none;color:var(--sub)}
+footer .flinks a:hover{color:var(--accent)}
+
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--accent-dim);color:var(--text);padding:12px 20px;border-radius:10px;font-size:.88rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.checkrow{display:flex;align-items:center;gap:8px;margin-top:10px}
+.checkrow input{width:auto}
+input[type=file]{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:10px;font-size:.85rem}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.devcredit{margin-top:6px;font-size:.78rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap headbar">
+    <div class="logo" onclick="showHome()">⚡ <span>Free Tools Hub</span></div>
+    <nav class="desknav" id="desknav"></nav>
+    <div class="grow"></div>
+    <div id="searchTop"><span>🔎</span><input id="searchTopInput" placeholder="Search tools..." oninput="doSearch(this.value,'top')"></div>
+    <button class="icnbtn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">🌙</button>
+    <button class="icnbtn hamburger" onclick="toggleMobMenu()" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobmenu" id="mobmenu"></div>
+</header>
+
+<main class="wrap">
+  <div id="homeView">
+    <section class="hero">
+      <h1>Free Tools for Everyone</h1>
+      <p>Fast, simple and free tools that work directly in your browser.</p>
+      <div class="searchbox">
+        <input id="searchMain" placeholder="Search tools..." oninput="doSearch(this.value,'main')" onfocus="doSearch(this.value,'main')">
+        <div id="searchResults"></div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Categories</h2>
+    <div class="grid" id="catGrid"></div>
+
+    <h2 class="section-title">Popular Tools</h2>
+    <div class="toolgrid" id="popularGrid"></div>
+
+    <div id="recentWrap" style="display:none">
+      <h2 class="section-title">Recently Used</h2>
+      <div class="toolgrid" id="recentGrid"></div>
+    </div>
+
+    <div id="favWrap" style="display:none">
+      <h2 class="section-title">Favorites</h2>
+      <div class="toolgrid" id="favGrid"></div>
+    </div>
+
+    <div id="catView" style="display:none">
+      <h2 class="section-title" id="catViewTitle"></h2>
+      <div class="toolgrid" id="catViewGrid"></div>
+    </div>
+  </div>
+
+  <div id="toolViews"></div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong>Free Tools Hub</strong>
+    <p>Free browser-based tools for everyday tasks.</p>
+    <div class="flinks">
+      <a href="#" onclick="return false">About</a>
+      <a href="#" onclick="return false">Privacy</a>
+      <a href="#" onclick="return false">Terms</a>
+      <a href="#" onclick="return false">Contact</a>
+    </div>
+    <div>© 2026 Free Tools Hub</div>
+    <div class="devcredit">Developed by Vraj Patel &amp; Vishwam Patel</div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+/* ---------- utilities ---------- */
+const $=s=>document.querySelector(s);
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),1800);}
+function copyText(t){try{navigator.clipboard.writeText(t);toast('Copied to clipboard');}catch(e){toast('Could not copy');}}
+function downloadText(name,content){const b=new Blob([content],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();}
+function ls(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch(e){return d;}}
+function setLs(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+function initImageTool(root,mode){
+ let img=null,fileName='image';
+ const file=root.querySelector('#file'),preview=root.querySelector('#preview'),out=root.querySelector('#out');
+ const cv=document.createElement('canvas');
+ file.onchange=e=>{const f=e.target.files[0];if(!f)return;fileName=f.name.replace(/\.[^.]+$/,'');const url=URL.createObjectURL(f);img=new Image();img.onload=()=>{preview.src=url;preview.style.display='block';out.textContent='Loaded: '+f.name+' ('+Math.round(f.size/1024)+' KB)';};img.src=url;};
+ root.querySelector('[data-act=run]').onclick=()=>{
+  if(!img){out.textContent='Please choose an image first.';return;}
+  let w=img.width,h=img.height,mime='image/png',quality=0.92;
+  if(mode==='compress'){quality=parseFloat(root.querySelector('#q').value)/100;mime='image/jpeg';cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);}
+  else if(mode==='resize'){w=parseInt(root.querySelector('#rw').value)||w;h=parseInt(root.querySelector('#rh').value)||h;cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);}
+  else if(mode==='crop'){const cx=parseInt(root.querySelector('#cx').value)||0,cy=parseInt(root.querySelector('#cy').value)||0,cw=parseInt(root.querySelector('#cw').value)||w,ch=parseInt(root.querySelector('#ch').value)||h;cv.width=cw;cv.height=ch;cv.getContext('2d').drawImage(img,cx,cy,cw,ch,0,0,cw,ch);}
+  else{cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);if(mode==='topng')mime='image/png';if(mode==='tojpg')mime='image/jpeg';}
+  const dataUrl=cv.toDataURL(mime,quality);
+  preview.src=dataUrl;preview.style.display='block';
+  cv.toBlob(blob=>{out.textContent='Output size: '+Math.round(blob.size/1024)+' KB';root._lastBlob=blob;root._lastExt=mime.split('/')[1];},mime,quality);
+ };
+ root.querySelector('[data-act=download]').onclick=()=>{
+  if(!root._lastBlob){out.textContent='Run the tool first.';return;}
+  const a=document.createElement('a');a.href=URL.createObjectURL(root._lastBlob);a.download=fileName+'.'+(root._lastExt==='jpeg'?'jpg':root._lastExt);a.click();
+ };
+}
+function formatBraces(code){
+ code=code.replace(/\s*{\s*/g,' {\n').replace(/\s*}\s*/g,'\n}\n').replace(/;\s*/g,';\n');
+ let depth=0,result='';
+ code.split('\n').forEach(line=>{line=line.trim();if(!line)return;if(line.startsWith('}'))depth=Math.max(0,depth-1);result+='  '.repeat(depth)+line+'\n';if(line.endsWith('{'))depth++;});
+ return result.trim();
+}
+function formatHTML(code){
+ code=code.replace(/></g,'>\n<');
+ let depth=0,result='';
+ code.split('\n').forEach(line=>{line=line.trim();if(!line)return;if(/^<\//.test(line))depth=Math.max(0,depth-1);result+='  '.repeat(depth)+line+'\n';if(/^<[^!/][^>]*[^/]>$/.test(line)&&!/^<(br|img|input|hr|meta|link)/i.test(line))depth++;});
+ return result.trim();
+}
+
+/* theme */
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);$('#themeBtn').textContent=t==='light'?'☀️':'🌙';setLs('ftb_theme',t);}
+function toggleTheme(){applyTheme((localStorage.getItem('ftb_theme')||'"dark"').replace(/"/g,'')==='light'?'dark':'light');}
+applyTheme((ls('ftb_theme','light')));
+
+/* ---------- categories ---------- */
+const CATS=[
+ {id:'text',name:'Text Tools',icon:'📝',desc:'Word count, case & more'},
+ {id:'image',name:'Image Tools',icon:'🖼️',desc:'Compress & convert'},
+ {id:'dev',name:'Developer Tools',icon:'💻',desc:'JSON, Base64, URL'},
+ {id:'calc',name:'Calculators',icon:'🔢',desc:'Math made simple'},
+ {id:'security',name:'Security & Utility',icon:'🔐',desc:'Passwords & more'},
+ {id:'file',name:'File Tools',icon:'📁',desc:'Work with files'},
+];
+
+/* ---------- tools registry ---------- */
+/* each tool: id,name,cat,icon,desc,how, body(html), init(root) */
+const TOOLS=[
+{id:'word-counter',name:'Word Counter',cat:'text',icon:'📝',desc:'Count words, characters, sentences and paragraphs instantly.',
+ how:'Paste or type text below — counts update live as you type. Everything runs in your browser; nothing is uploaded.',
+ body:`<label>Your text</label><textarea id="in"></textarea>
+ <div class="stats"><div class="stat"><b id="wWords">0</b><span>Words</span></div><div class="stat"><b id="wChars">0</b><span>Characters</span></div><div class="stat"><b id="wSent">0</b><span>Sentences</span></div><div class="stat"><b id="wPara">0</b><span>Paragraphs</span></div></div>
+ <div class="row"><button class="btn btn-secondary" data-act="clear">Clear</button></div>`,
+ init(root){const i=root.querySelector('#in');const upd=()=>{const t=i.value;root.querySelector('#wWords').textContent=(t.trim().match(/\S+/g)||[]).length;root.querySelector('#wChars').textContent=t.length;root.querySelector('#wSent').textContent=(t.match(/[.!?]+/g)||[]).length;root.querySelector('#wPara').textContent=(t.split(/\n+/).filter(p=>p.trim())).length;};i.addEventListener('input',upd);upd();
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';upd();};}},
+
+{id:'char-counter',name:'Character Counter',cat:'text',icon:'📝',desc:'Count characters with and without spaces.',
+ how:'Type or paste text — see total characters, with and without spaces, updated live.',
+ body:`<label>Your text</label><textarea id="in"></textarea>
+ <div class="stats"><div class="stat"><b id="cAll">0</b><span>With spaces</span></div><div class="stat"><b id="cNo">0</b><span>Without spaces</span></div></div>
+ <div class="row"><button class="btn btn-secondary" data-act="clear">Clear</button></div>`,
+ init(root){const i=root.querySelector('#in');const upd=()=>{root.querySelector('#cAll').textContent=i.value.length;root.querySelector('#cNo').textContent=i.value.replace(/\s/g,'').length;};i.addEventListener('input',upd);
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';upd();};}},
+
+{id:'case-converter',name:'Case Converter',cat:'text',icon:'📝',desc:'Convert text to upper, lower, title or sentence case.',
+ how:'Enter text, choose a case style, and click Convert. Use Copy to grab the result.',
+ body:`<label>Your text</label><textarea id="in"></textarea>
+ <label>Case</label><select id="mode"><option value="upper">UPPERCASE</option><option value="lower">lowercase</option><option value="title">Title Case</option><option value="sentence">Sentence case</option></select>
+ <div class="row"><button class="btn btn-primary" data-act="run">Convert</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),m=root.querySelector('#mode'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{const t=i.value;let r=t;if(m.value==='upper')r=t.toUpperCase();else if(m.value==='lower')r=t.toLowerCase();else if(m.value==='title')r=t.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase());else if(m.value==='sentence')r=t.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g,c=>c.toUpperCase());o.textContent=r;};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'text-reverser',name:'Text Reverser',cat:'text',icon:'📝',desc:'Reverse your text character by character.',
+ how:'Type text and click Reverse to flip the character order.',
+ body:`<label>Your text</label><textarea id="in"></textarea>
+ <div class="row"><button class="btn btn-primary" data-act="run">Reverse</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{o.textContent=i.value.split('').reverse().join('');};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'dedupe-lines',name:'Remove Duplicate Lines',cat:'text',icon:'📝',desc:'Clean up a list by removing repeated lines.',
+ how:'Paste a list, one item per line. Duplicate lines are removed, keeping the first occurrence.',
+ body:`<label>Your list</label><textarea id="in"></textarea>
+ <div class="row"><button class="btn btn-primary" data-act="run">Remove Duplicates</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{o.textContent=[...new Set(i.value.split('\n'))].join('\n');};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'json-formatter',name:'JSON Formatter & Validator',cat:'dev',icon:'💻',desc:'Format, beautify and validate JSON data.',
+ how:'Paste JSON and click Format. Invalid JSON shows an error explaining what to fix.',
+ body:`<label>JSON input</label><textarea id="in" placeholder='{"key":"value"}'></textarea>
+ <div class="row"><button class="btn btn-primary" data-act="run">Format</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{try{o.textContent=JSON.stringify(JSON.parse(i.value),null,2);o.style.color='var(--ok)';}catch(e){o.textContent='Invalid JSON: '+e.message;o.style.color='var(--danger)';}};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';o.style.color='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'base64',name:'Base64 Encoder/Decoder',cat:'dev',icon:'💻',desc:'Encode text to Base64 or decode it back.',
+ how:'Enter text, pick Encode or Decode, then run. Decoding invalid Base64 shows an error.',
+ body:`<label>Input</label><textarea id="in"></textarea>
+ <label>Mode</label><select id="mode"><option value="enc">Encode</option><option value="dec">Decode</option></select>
+ <div class="row"><button class="btn btn-primary" data-act="run">Run</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),m=root.querySelector('#mode'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{try{o.textContent=m.value==='enc'?btoa(unescape(encodeURIComponent(i.value))):decodeURIComponent(escape(atob(i.value.trim())));o.style.color='';}catch(e){o.textContent='Error: invalid input for this mode.';o.style.color='var(--danger)';}};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'url-codec',name:'URL Encoder/Decoder',cat:'dev',icon:'💻',desc:'Encode or decode URLs and query strings.',
+ how:'Enter text or a URL, choose Encode or Decode, and run.',
+ body:`<label>Input</label><textarea id="in"></textarea>
+ <label>Mode</label><select id="mode"><option value="enc">Encode</option><option value="dec">Decode</option></select>
+ <div class="row"><button class="btn btn-primary" data-act="run">Run</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),m=root.querySelector('#mode'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{try{o.textContent=m.value==='enc'?encodeURIComponent(i.value):decodeURIComponent(i.value);o.style.color='';}catch(e){o.textContent='Error: invalid input.';o.style.color='var(--danger)';}};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'color-picker',name:'Color Picker',cat:'dev',icon:'💻',desc:'Pick a color and get HEX, RGB and HSL values.',
+ how:'Choose a color with the picker; HEX, RGB and HSL codes update automatically.',
+ body:`<div class="colorwrap"><input type="color" id="c" value="#22d3ee"><div style="flex:1"><div id="out" class="output" style="margin-top:0"></div></div></div>
+ <div class="swatch" id="sw"></div>
+ <div class="row"><button class="btn btn-secondary" data-act="copy">Copy HEX</button></div>`,
+ init(root){const c=root.querySelector('#c'),o=root.querySelector('#out'),sw=root.querySelector('#sw');
+  const hexToRgb=h=>{const n=parseInt(h.slice(1),16);return [n>>16&255,n>>8&255,n&255];};
+  const rgbToHsl=(r,g,b)=>{r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b);let h,s,l=(max+min)/2;if(max===min){h=s=0;}else{const d=max-min;s=l>0.5?d/(2-max-min):d/(max+min);switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;}h/=6;}return [Math.round(h*360),Math.round(s*100),Math.round(l*100)];};
+  const upd=()=>{const rgb=hexToRgb(c.value);const hsl=rgbToHsl(...rgb);sw.style.background=c.value;o.textContent=`HEX: ${c.value}\nRGB: rgb(${rgb.join(', ')})\nHSL: hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;};
+  c.addEventListener('input',upd);upd();
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(c.value);}},
+
+{id:'percentage-calc',name:'Percentage Calculator',cat:'calc',icon:'🔢',desc:'Find what percent one number is of another, or apply a percentage.',
+ how:'Enter the two values — the result updates automatically as you type.',
+ body:`<label>What is X% of Y?</label><div class="row"><input type="number" id="p1" placeholder="X %" style="flex:1"><input type="number" id="p2" placeholder="Y" style="flex:1"></div>
+ <div class="output" id="out1">Result: —</div>
+ <label>X is what % of Y?</label><div class="row"><input type="number" id="p3" placeholder="X" style="flex:1"><input type="number" id="p4" placeholder="Y" style="flex:1"></div>
+ <div class="output" id="out2">Result: —</div>`,
+ init(root){const p1=root.querySelector('#p1'),p2=root.querySelector('#p2'),o1=root.querySelector('#out1');
+  const p3=root.querySelector('#p3'),p4=root.querySelector('#p4'),o2=root.querySelector('#out2');
+  const u1=()=>{const v=(parseFloat(p1.value)/100)*parseFloat(p2.value);o1.textContent='Result: '+(isNaN(v)?'—':v.toFixed(2));};
+  const u2=()=>{const v=(parseFloat(p3.value)/parseFloat(p4.value))*100;o2.textContent='Result: '+(isNaN(v)?'—':v.toFixed(2)+'%');};
+  [p1,p2].forEach(e=>e.addEventListener('input',u1));[p3,p4].forEach(e=>e.addEventListener('input',u2));}},
+
+{id:'age-calc',name:'Age Calculator',cat:'calc',icon:'🔢',desc:'Calculate exact age in years, months and days from a birth date.',
+ how:'Pick a birth date — your age is calculated as of today.',
+ body:`<label>Birth date</label><input type="text" id="bd" placeholder="YYYY-MM-DD">
+ <div class="row"><button class="btn btn-primary" data-act="run">Calculate</button></div>
+ <div class="output" id="out">Result: —</div>`,
+ init(root){const bd=root.querySelector('#bd'),o=root.querySelector('#out');
+  bd.type='date';
+  root.querySelector('[data-act=run]').onclick=()=>{if(!bd.value){o.textContent='Please pick a date.';return;}const b=new Date(bd.value),n=new Date();let y=n.getFullYear()-b.getFullYear(),m=n.getMonth()-b.getMonth(),d=n.getDate()-b.getDate();if(d<0){m--;d+=new Date(n.getFullYear(),n.getMonth(),0).getDate();}if(m<0){y--;m+=12;}o.textContent=`${y} years, ${m} months, ${d} days`;};}},
+
+{id:'bmi-calc',name:'BMI Calculator',cat:'calc',icon:'🔢',desc:'Calculate Body Mass Index from height and weight.',
+ how:'Enter height in centimeters and weight in kilograms, then calculate.',
+ body:`<label>Height (cm)</label><input type="number" id="h" placeholder="170">
+ <label>Weight (kg)</label><input type="number" id="w" placeholder="65">
+ <div class="row"><button class="btn btn-primary" data-act="run">Calculate</button></div>
+ <div class="output" id="out">Result: —</div>`,
+ init(root){const h=root.querySelector('#h'),w=root.querySelector('#w'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{const hm=parseFloat(h.value)/100,kg=parseFloat(w.value);if(!hm||!kg){o.textContent='Enter valid height and weight.';return;}const bmi=kg/(hm*hm);let cat=bmi<18.5?'Underweight':bmi<25?'Normal weight':bmi<30?'Overweight':'Obese';o.textContent=`BMI: ${bmi.toFixed(1)} (${cat})`;};}},
+
+{id:'unit-converter',name:'Unit Converter (Length)',cat:'calc',icon:'🔢',desc:'Convert between meters, feet, miles, kilometers and more.',
+ how:'Enter a value, choose the units to convert from and to.',
+ body:`<label>Value</label><input type="number" id="v" placeholder="1">
+ <div class="row"><select id="from" style="flex:1"></select><select id="to" style="flex:1"></select></div>
+ <div class="output" id="out">Result: —</div>`,
+ init(root){const units={m:1,km:1000,cm:0.01,mm:0.001,mi:1609.34,yd:0.9144,ft:0.3048,in:0.0254};
+  const v=root.querySelector('#v'),from=root.querySelector('#from'),to=root.querySelector('#to'),o=root.querySelector('#out');
+  Object.keys(units).forEach(u=>{from.innerHTML+=`<option value="${u}">${u}</option>`;to.innerHTML+=`<option value="${u}">${u}</option>`;});
+  to.value='ft';
+  const upd=()=>{const val=parseFloat(v.value);if(isNaN(val)){o.textContent='Result: —';return;}const meters=val*units[from.value];const res=meters/units[to.value];o.textContent=`Result: ${res.toFixed(4)} ${to.value}`;};
+  [v,from,to].forEach(e=>e.addEventListener('input',upd));upd();}},
+
+{id:'password-generator',name:'Password Generator',cat:'security',icon:'🔐',desc:'Generate strong, random passwords.',
+ how:'Choose a length and character types, then generate. Passwords are created locally and never sent anywhere.',
+ body:`<label>Length: <span id="lenVal">16</span></label><input type="range" id="len" min="6" max="48" value="16">
+ <div class="checkrow"><input type="checkbox" id="up" checked><label style="margin:0">Uppercase (A-Z)</label></div>
+ <div class="checkrow"><input type="checkbox" id="lo" checked><label style="margin:0">Lowercase (a-z)</label></div>
+ <div class="checkrow"><input type="checkbox" id="nu" checked><label style="margin:0">Numbers (0-9)</label></div>
+ <div class="checkrow"><input type="checkbox" id="sy"><label style="margin:0">Symbols (!@#$...)</label></div>
+ <div class="row"><button class="btn btn-primary" data-act="run">Generate</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out">—</div>`,
+ init(root){const len=root.querySelector('#len'),lv=root.querySelector('#lenVal'),o=root.querySelector('#out');
+  len.oninput=()=>lv.textContent=len.value;
+  const gen=()=>{const up=root.querySelector('#up').checked,lo=root.querySelector('#lo').checked,nu=root.querySelector('#nu').checked,sy=root.querySelector('#sy').checked;
+   let chars='';if(up)chars+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';if(lo)chars+='abcdefghijklmnopqrstuvwxyz';if(nu)chars+='0123456789';if(sy)chars+='!@#$%^&*()_+-=[]{}';
+   if(!chars){o.textContent='Select at least one character type.';return;}
+   const arr=new Uint32Array(parseInt(len.value));crypto.getRandomValues(arr);
+   o.textContent=Array.from(arr,n=>chars[n%chars.length]).join('');};
+  root.querySelector('[data-act=run]').onclick=gen;
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);
+  gen();}},
+
+{id:'image-compressor',name:'Image Compressor',cat:'image',icon:'🖼️',desc:'Reduce image file size by adjusting JPEG quality.',
+ how:'Upload an image, adjust the quality slider, then click Compress. Everything happens in your browser — nothing is uploaded.',
+ body:`<label>Choose image</label><input type="file" id="file" accept="image/*">
+ <img id="preview" style="max-width:100%;border-radius:10px;margin-top:12px;display:none">
+ <label>Quality: <span id="qv">80</span>%</label><input type="range" id="q" min="10" max="100" value="80">
+ <div class="row"><button class="btn btn-primary" data-act="run">Compress</button><button class="btn btn-secondary" data-act="download">Download</button></div>
+ <div class="output" id="out">Choose an image to begin.</div>`,
+ init(root){root.querySelector('#q').oninput=e=>root.querySelector('#qv').textContent=e.target.value;initImageTool(root,'compress');}},
+
+{id:'image-resizer',name:'Image Resizer',cat:'image',icon:'🖼️',desc:'Resize an image to exact width and height in pixels.',
+ how:'Upload an image, enter the target width and height in pixels, then click Resize.',
+ body:`<label>Choose image</label><input type="file" id="file" accept="image/*">
+ <img id="preview" style="max-width:100%;border-radius:10px;margin-top:12px;display:none">
+ <div class="row"><input type="number" id="rw" placeholder="Width (px)" style="flex:1"><input type="number" id="rh" placeholder="Height (px)" style="flex:1"></div>
+ <div class="row"><button class="btn btn-primary" data-act="run">Resize</button><button class="btn btn-secondary" data-act="download">Download</button></div>
+ <div class="output" id="out">Choose an image to begin.</div>`,
+ init(root){initImageTool(root,'resize');}},
+
+{id:'image-cropper',name:'Image Cropper',cat:'image',icon:'🖼️',desc:'Crop an image to a specific area using pixel coordinates.',
+ how:'Upload an image, set the crop position (X, Y) and size (Width, Height) in pixels, then click Crop.',
+ body:`<label>Choose image</label><input type="file" id="file" accept="image/*">
+ <img id="preview" style="max-width:100%;border-radius:10px;margin-top:12px;display:none">
+ <div class="row"><input type="number" id="cx" placeholder="X" style="flex:1"><input type="number" id="cy" placeholder="Y" style="flex:1"></div>
+ <div class="row"><input type="number" id="cw" placeholder="Width" style="flex:1"><input type="number" id="ch" placeholder="Height" style="flex:1"></div>
+ <div class="row"><button class="btn btn-primary" data-act="run">Crop</button><button class="btn btn-secondary" data-act="download">Download</button></div>
+ <div class="output" id="out">Choose an image to begin.</div>`,
+ init(root){initImageTool(root,'crop');}},
+
+{id:'jpg-to-png',name:'JPG to PNG',cat:'image',icon:'🖼️',desc:'Convert a JPG image to PNG format.',
+ how:'Upload a JPG image and click Convert, then download the PNG result.',
+ body:`<label>Choose JPG image</label><input type="file" id="file" accept="image/jpeg">
+ <img id="preview" style="max-width:100%;border-radius:10px;margin-top:12px;display:none">
+ <div class="row"><button class="btn btn-primary" data-act="run">Convert</button><button class="btn btn-secondary" data-act="download">Download PNG</button></div>
+ <div class="output" id="out">Choose an image to begin.</div>`,
+ init(root){initImageTool(root,'topng');}},
+
+{id:'png-to-jpg',name:'PNG to JPG',cat:'image',icon:'🖼️',desc:'Convert a PNG image to JPG format.',
+ how:'Upload a PNG image and click Convert, then download the JPG result.',
+ body:`<label>Choose PNG image</label><input type="file" id="file" accept="image/png">
+ <img id="preview" style="max-width:100%;border-radius:10px;margin-top:12px;display:none">
+ <div class="row"><button class="btn btn-primary" data-act="run">Convert</button><button class="btn btn-secondary" data-act="download">Download JPG</button></div>
+ <div class="output" id="out">Choose an image to begin.</div>`,
+ init(root){initImageTool(root,'tojpg');}},
+
+{id:'image-to-base64',name:'Image to Base64',cat:'image',icon:'🖼️',desc:'Convert an image file into a Base64 data string.',
+ how:'Upload an image — its Base64 representation appears below. Use Copy to grab the full string.',
+ body:`<label>Choose image</label><input type="file" id="file" accept="image/*">
+ <div class="row"><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out">Choose an image to begin.</div>`,
+ init(root){const file=root.querySelector('#file'),out=root.querySelector('#out');
+  file.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{out.textContent=r.result;};r.readAsDataURL(f);};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(out.textContent);}},
+
+{id:'html-formatter',name:'HTML Formatter',cat:'dev',icon:'💻',desc:'Indent and tidy up HTML markup.',
+ how:'Paste HTML and click Format to add line breaks and indentation.',
+ body:`<label>HTML input</label><textarea id="in" placeholder="<div><p>Hi</p></div>"></textarea>
+ <div class="row"><button class="btn btn-primary" data-act="run">Format</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{o.textContent=formatHTML(i.value);};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'css-formatter',name:'CSS Formatter',cat:'dev',icon:'💻',desc:'Indent and tidy up CSS code.',
+ how:'Paste CSS and click Format to add line breaks and indentation based on braces.',
+ body:`<label>CSS input</label><textarea id="in" placeholder="body{margin:0}"></textarea>
+ <div class="row"><button class="btn btn-primary" data-act="run">Format</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{o.textContent=formatBraces(i.value);};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'js-formatter',name:'JavaScript Formatter',cat:'dev',icon:'💻',desc:'Indent and tidy up JavaScript code.',
+ how:'Paste JavaScript and click Format to add line breaks and indentation based on braces.',
+ body:`<label>JavaScript input</label><textarea id="in" placeholder="function f(){return 1}"></textarea>
+ <div class="row"><button class="btn btn-primary" data-act="run">Format</button><button class="btn btn-secondary" data-act="clear">Clear</button><button class="btn btn-secondary" data-act="copy">Copy</button></div>
+ <div class="output" id="out"></div>`,
+ init(root){const i=root.querySelector('#in'),o=root.querySelector('#out');
+  root.querySelector('[data-act=run]').onclick=()=>{o.textContent=formatBraces(i.value);};
+  root.querySelector('[data-act=clear]').onclick=()=>{i.value='';o.textContent='';};
+  root.querySelector('[data-act=copy]').onclick=()=>copyText(o.textContent);}},
+
+{id:'qr-generator',name:'QR Code Generator',cat:'security',icon:'🔐',desc:'Generate a scannable QR code from any text or URL.',
+ how:'Type text or a URL and click Generate, then use Download to save the QR code as a PNG image.',
+ body:`<label>Text or URL</label><input type="text" id="in" placeholder="https://example.com">
+ <div class="row"><button class="btn btn-primary" data-act="run">Generate</button><button class="btn btn-secondary" data-act="download">Download PNG</button></div>
+ <div id="qrbox" style="margin-top:16px;display:flex;justify-content:center"></div>`,
+ init(root){const i=root.querySelector('#in'),box=root.querySelector('#qrbox');
+  root.querySelector('[data-act=run]').onclick=()=>{if(!i.value.trim()){toast('Enter some text first');return;}box.innerHTML='';new QRCode(box,{text:i.value,width:200,height:200,colorDark:'#0f1b2d',colorLight:'#ffffff'});};
+  root.querySelector('[data-act=download]').onclick=()=>{const c=box.querySelector('canvas');if(!c){toast('Generate a QR code first');return;}const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='qrcode.png';a.click();};}},
+
+{id:'time-converter',name:'Time Converter',cat:'calc',icon:'🔢',desc:'Convert a duration between seconds, minutes, hours and days.',
+ how:'Enter a value, choose the units to convert from and to.',
+ body:`<label>Value</label><input type="number" id="v" placeholder="1">
+ <div class="row"><select id="from" style="flex:1"></select><select id="to" style="flex:1"></select></div>
+ <div class="output" id="out">Result: —</div>`,
+ init(root){const units={seconds:1,minutes:60,hours:3600,days:86400};
+  const v=root.querySelector('#v'),from=root.querySelector('#from'),to=root.querySelector('#to'),o=root.querySelector('#out');
+  Object.keys(units).forEach(u=>{from.innerHTML+=`<option value="${u}">${u}</option>`;to.innerHTML+=`<option value="${u}">${u}</option>`;});
+  to.value='hours';
+  const upd=()=>{const val=parseFloat(v.value);if(isNaN(val)){o.textContent='Result: —';return;}const secs=val*units[from.value];o.textContent=`Result: ${(secs/units[to.value]).toFixed(4)} ${to.value}`;};
+  [v,from,to].forEach(e=>e.addEventListener('input',upd));upd();}},
+
+{id:'data-converter',name:'Data Storage Converter',cat:'calc',icon:'🔢',desc:'Convert between bytes, KB, MB, GB and TB.',
+ how:'Enter a value, choose the units to convert from and to.',
+ body:`<label>Value</label><input type="number" id="v" placeholder="1">
+ <div class="row"><select id="from" style="flex:1"></select><select id="to" style="flex:1"></select></div>
+ <div class="output" id="out">Result: —</div>`,
+ init(root){const units={Bytes:1,KB:1024,MB:1024**2,GB:1024**3,TB:1024**4};
+  const v=root.querySelector('#v'),from=root.querySelector('#from'),to=root.querySelector('#to'),o=root.querySelector('#out');
+  Object.keys(units).forEach(u=>{from.innerHTML+=`<option value="${u}">${u}</option>`;to.innerHTML+=`<option value="${u}">${u}</option>`;});
+  from.value='MB';to.value='GB';
+  const upd=()=>{const val=parseFloat(v.value);if(isNaN(val)){o.textContent='Result: —';return;}const bytes=val*units[from.value];o.textContent=`Result: ${(bytes/units[to.value]).toFixed(6)} ${to.value}`;};
+  [v,from,to].forEach(e=>e.addEventListener('input',upd));upd();}},
+];
+
+/* ---------- state ---------- */
+let recent=ls('ftb_recent',[]);
+let favs=ls('ftb_favs',[]);
+
+/* ---------- render nav ---------- */
+function buildNav(){
+  const items=[['Home',()=>showHome()],...CATS.map(c=>[c.name,()=>showCat(c.id)])];
+  $('#desknav').innerHTML=items.map((it,idx)=>`<button data-i="${idx}">${it[0]}</button>`).join('');
+  [...$('#desknav').children].forEach((b,idx)=>b.onclick=items[idx][1]);
+  $('#mobmenu').innerHTML=items.map((it,idx)=>`<button data-i="${idx}">${it[0]}</button>`).join('');
+  [...$('#mobmenu').children].forEach((b,idx)=>b.onclick=()=>{items[idx][1]();toggleMobMenu(true);});
+}
+function toggleMobMenu(forceClose){const m=$('#mobmenu');if(forceClose){m.classList.remove('open');return;}m.classList.toggle('open');}
+
+/* ---------- home rendering ---------- */
+function renderCatGrid(){
+  $('#catGrid').innerHTML=CATS.map(c=>`<div class="catcard" onclick="showCat('${c.id}')"><div class="ic">${c.icon}</div><h3>${c.name}</h3><p>${c.desc}</p></div>`).join('');
+}
+function toolCardHTML(t){
+  const isFav=favs.includes(t.id);
+  return `<div class="toolcard"><span onclick="showTool('${t.id}')" style="flex:1;cursor:pointer">${t.icon} ${t.name}</span><button class="fav ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav('${t.id}')">★</button></div>`;
+}
+function renderPopular(){
+  const ids=['word-counter','json-formatter','image-compressor','qr-generator','bmi-calc','html-formatter'];
+  $('#popularGrid').innerHTML=ids.map(id=>toolCardHTML(TOOLS.find(t=>t.id===id))).join('');
+}
+function renderRecent(){
+  const wrap=$('#recentWrap');
+  if(!recent.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  $('#recentGrid').innerHTML=recent.map(id=>TOOLS.find(t=>t.id===id)).filter(Boolean).map(toolCardHTML).join('');
+}
+function renderFavs(){
+  const wrap=$('#favWrap');
+  if(!favs.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  $('#favGrid').innerHTML=favs.map(id=>TOOLS.find(t=>t.id===id)).filter(Boolean).map(toolCardHTML).join('');
+}
+function toggleFav(id){
+  favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];
+  setLs('ftb_favs',favs);renderFavs();renderPopular();renderRecent();
+  if(document.getElementById('catView').style.display!=='none')renderCatViewGrid(window._curCat);
+  toast(favs.includes(id)?'Added to favorites':'Removed from favorites');
+}
+function addRecent(id){
+  recent=[id,...recent.filter(x=>x!==id)].slice(0,6);
+  setLs('ftb_recent',recent);renderRecent();
+}
+
+/* ---------- category view ---------- */
+function showCat(catId){
+  window._curCat=catId;
+  hideAllToolPages();
+  $('#toolViews').style.display='none';
+  $('#homeView').style.display='block';
+  document.querySelectorAll('#homeView > section, #catGrid, #recentWrap, #favWrap').forEach(()=>{});
+  $('#catView').style.display='block';
+  $('#catViewTitle').textContent=CATS.find(c=>c.id===catId).name;
+  renderCatViewGrid(catId);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderCatViewGrid(catId){
+  $('#catViewGrid').innerHTML=TOOLS.filter(t=>t.cat===catId).map(toolCardHTML).join('');
+}
+
+/* ---------- search ---------- */
+function doSearch(q,src){
+  q=q.trim().toLowerCase();
+  if(src==='top'){if(q){showResultsQuick(q);}return;}
+  const box=$('#searchResults');
+  if(!q){box.classList.remove('show');return;}
+  const res=TOOLS.filter(t=>t.name.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q));
+  if(!res.length){box.innerHTML='<div class="sr-item">No tools found</div>';}
+  else box.innerHTML=res.map(t=>`<div class="sr-item" onclick="showTool('${t.id}');$('#searchResults').classList.remove('show');$('#searchMain').value='';">${t.icon} ${t.name}</div>`).join('');
+  box.classList.add('show');
+}
+function showResultsQuick(q){
+  const res=TOOLS.filter(t=>t.name.toLowerCase().includes(q));
+  if(res.length){showTool(res[0].id);$('#searchTopInput').value='';}
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.searchbox'))$('#searchResults').classList.remove('show');});
+
+/* ---------- tool pages ---------- */
+function buildToolPages(){
+  $('#toolViews').innerHTML=TOOLS.map(t=>`
+   <section class="toolpage" id="tp-${t.id}">
+     <button class="backbtn" onclick="showHome()">← Back to all tools</button>
+     <div class="toolhead"><h2>${t.icon} ${t.name}</h2><p>${t.desc}</p></div>
+     <div class="panel">${t.body}</div>
+     <div class="explain"><strong>How it works:</strong> ${t.how}</div>
+   </section>`).join('');
+  TOOLS.forEach(t=>t.init(document.getElementById('tp-'+t.id)));
+}
+function hideAllToolPages(){document.querySelectorAll('.toolpage').forEach(p=>p.classList.remove('active'));}
+function showTool(id){
+  hideAllToolPages();
+  $('#homeView').style.display='none';
+  $('#toolViews').style.display='block';
+  document.getElementById('tp-'+id).classList.add('active');
+  addRecent(id);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showHome(){
+  hideAllToolPages();
+  $('#toolViews').style.display='none';
+  $('#homeView').style.display='block';
+  $('#catView').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- init ---------- */
+buildNav();
+renderCatGrid();
+renderPopular();
+renderRecent();
+renderFavs();
+buildToolPages();
+</script>
+</body>
+</html>
